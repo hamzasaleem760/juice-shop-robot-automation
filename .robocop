@@ -1,0 +1,9 @@
+[robocop]
+exclude =
+    0501,
+    0502,
+    TAG05,
+    DEPR05,
+    DEPR06,
+    SPC03,
+    SPC02

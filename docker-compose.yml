@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  juice-shop:
+    image: bkimminich/juice-shop:latest
+    container_name: juice-shop-target
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  test-runner:
+    build: .
+    container_name: robot-test-runner
+    depends_on:
+      juice-shop:
+        condition: service_healthy
+    environment:
+      - BASE_URL=http://juice-shop:3000
+    volumes:
+      - ./results:/app/results
+    command: >
+      bash -c "pabot --processes 2 --variable BASE_URL:http://juice-shop:3000 --outputdir results tests"
